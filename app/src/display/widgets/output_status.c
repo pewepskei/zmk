@@ -20,6 +20,14 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
+static const char *profile_names[] = {
+    "PC",
+    "Phone",
+    "iPad",
+    "Work",
+    "TV"
+};
+
 struct output_status_state {
     struct zmk_endpoint_instance selected_endpoint;
     enum zmk_transport preferred_transport;
@@ -59,18 +67,27 @@ static void set_status_symbol(lv_obj_t *label, struct output_status_state state)
         }
         break;
 
-    case ZMK_TRANSPORT_BLE:
+    case ZMK_TRANSPORT_BLE: {
+        uint8_t profile = state.selected_endpoint.ble.profile_index;
+        const char *name =
+            profile < ARRAY_SIZE(profile_names)
+                ? profile_names[profile]
+                : "?";
+    
         if (state.active_profile_bonded) {
             if (state.active_profile_connected) {
-                snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_OK,
-                         state.selected_endpoint.ble.profile_index + 1);
+                snprintf(text, sizeof(text),
+                         LV_SYMBOL_WIFI " %s " LV_SYMBOL_OK,
+                         name);
             } else {
-                snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_CLOSE,
-                         state.selected_endpoint.ble.profile_index + 1);
+                snprintf(text, sizeof(text),
+                         LV_SYMBOL_WIFI " %s " LV_SYMBOL_CLOSE,
+                         name);
             }
         } else {
-            snprintf(text, sizeof(text), LV_SYMBOL_WIFI " %i " LV_SYMBOL_SETTINGS,
-                     state.selected_endpoint.ble.profile_index + 1);
+            snprintf(text, sizeof(text),
+                     LV_SYMBOL_WIFI " %s " LV_SYMBOL_SETTINGS,
+                     name);
         }
         break;
     }
