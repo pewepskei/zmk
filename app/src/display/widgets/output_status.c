@@ -21,11 +21,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 static const char *profile_names[] = {
-    "PC",
+    "Pewep",
     "Phone",
-    "iPad",
     "Work",
-    "TV"
+    "NOC",
+    "Guest"
 };
 
 struct output_status_state {
