@@ -91,6 +91,7 @@ static void set_status_symbol(lv_obj_t *label, struct output_status_state state)
         }
         break;
     }
+    }
 
     lv_label_set_text(label, text);
 }
