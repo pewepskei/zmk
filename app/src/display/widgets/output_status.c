@@ -21,11 +21,6 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/split/bluetooth/peripheral.h>
 #include <zmk/events/split_peripheral_status_changed.h>
 
-#if IS_ENABLED(CONFIG_ZMK_SPLIT)
-#include <zmk/split/bluetooth/peripheral.h>
-#include <zmk/events/split_peripheral_status_changed.h>
-#endif
-
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 static const char *profile_names[] = {
@@ -41,8 +36,6 @@ struct output_status_state {
     enum zmk_transport preferred_transport;
     bool active_profile_connected;
     bool active_profile_bonded;
-
-    bool split_connected;
 };
 
 static struct output_status_state get_state(const zmk_event_t *_eh) {
@@ -51,12 +44,6 @@ static struct output_status_state get_state(const zmk_event_t *_eh) {
         .preferred_transport = zmk_endpoint_get_preferred_transport(),
         .active_profile_connected = zmk_ble_active_profile_is_connected(),
         .active_profile_bonded = !zmk_ble_active_profile_is_open(),
-
-#if IS_ENABLED(CONFIG_ZMK_SPLIT)
-        .split_connected = zmk_split_bt_peripheral_is_connected(),
-#else
-        .split_connected = false,
-#endif
     };
 }
 
@@ -93,30 +80,21 @@ static void set_status_symbol(lv_obj_t *label, struct output_status_state state)
         if (state.active_profile_bonded) {
           if (state.active_profile_connected) {
             snprintf(text, sizeof(text),
-                "%s %s %s",
+                "%s %s",
                 name,
                 state.active_profile_connected
-                ? LV_SYMBOL_OK
-                : LV_SYMBOL_CLOSE,
-                state.split_connected
                 ? LV_SYMBOL_OK
                 : LV_SYMBOL_CLOSE);
             } else {
                 snprintf(text, sizeof(text),
-                     "%s %s %s",
+                     "%s %s",
                      name,
-                     LV_SYMBOL_CLOSE,
-                     state.split_connected
-                         ? LV_SYMBOL_OK
-                         : LV_SYMBOL_CLOSE);
+                     LV_SYMBOL_CLOSE);
             }
         } else {
             snprintf(text, sizeof(text),
-                     "%s " LV_SYMBOL_SETTINGS " %s",
-                     name,
-                     state.split_connected
-                         ? LV_SYMBOL_OK
-                         : LV_SYMBOL_CLOSE);
+                     "%s " LV_SYMBOL_SETTINGS,
+                     name);
         }
         break;
     }
@@ -137,11 +115,6 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_endpoint_changed);
 // but there wasn't another endpoint to switch from/to, so update on BLE events too.
 #if defined(CONFIG_ZMK_BLE)
 ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
-#endif
-
-#if IS_ENABLED(CONFIG_ZMK_SPLIT)
-ZMK_SUBSCRIPTION(widget_output_status,
-                 zmk_split_peripheral_status_changed);
 #endif
 
 int zmk_widget_output_status_init(struct zmk_widget_output_status *widget, lv_obj_t *parent) {
