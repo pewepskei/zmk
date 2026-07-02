@@ -21,11 +21,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 static const char *profile_names[] = {
-    "Pewep",
-    "Phone",
-    "Work",
-    "NOC",
-    "Guest"
+    LV_SYMBOL_HOME,      // Pewep
+    LV_SYMBOL_CALL,      // Phone
+    LV_SYMBOL_SETTINGS,  // Work
+    LV_SYMBOL_SETTINGS,  // NOC
+    LV_SYMBOL_USER       // Guest
 };
 
 struct output_status_state {
@@ -77,16 +77,16 @@ static void set_status_symbol(lv_obj_t *label, struct output_status_state state)
         if (state.active_profile_bonded) {
             if (state.active_profile_connected) {
                 snprintf(text, sizeof(text),
-                         LV_SYMBOL_WIFI " %s " LV_SYMBOL_OK,
+                         "%s " LV_SYMBOL_OK,
                          name);
             } else {
                 snprintf(text, sizeof(text),
-                         LV_SYMBOL_WIFI " %s " LV_SYMBOL_CLOSE,
+                         "%s " LV_SYMBOL_CLOSE,
                          name);
             }
         } else {
             snprintf(text, sizeof(text),
-                     LV_SYMBOL_WIFI " %s " LV_SYMBOL_SETTINGS,
+                     "%s " LV_SYMBOL_SETTINGS,
                      name);
         }
         break;
