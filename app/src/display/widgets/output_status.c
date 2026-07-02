@@ -33,7 +33,7 @@ static const char *profile_names[] = {
     LV_SYMBOL_CALL,      // Phone
     LV_SYMBOL_SETTINGS,  // Work
     LV_SYMBOL_SETTINGS,  // NOC
-    LV_SYMBOL_USER       // Guest
+    LV_SYMBOL_EYE_OPEN   // Guest
 };
 
 struct output_status_state {
