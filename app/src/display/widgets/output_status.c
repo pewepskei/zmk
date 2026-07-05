@@ -26,9 +26,9 @@ static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 static const char *profile_names[] = {
     LV_SYMBOL_HOME,      // Pewep
     LV_SYMBOL_CALL,      // Phone
-    LV_SYMBOL_SETTINGS,  // Work
+    LV_SYMBOL_EYE_OPEN,  // Work
     LV_SYMBOL_SETTINGS,  // NOC
-    LV_SYMBOL_EYE_OPEN   // Guest
+    LV_SYMBOL_DRIVE      // Guest
 };
 
 struct output_status_state {
