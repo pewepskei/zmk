@@ -30,7 +30,9 @@ static void set_status_symbol(lv_obj_t *label, struct peripheral_status_state st
         state.connected ? (LV_SYMBOL_WIFI " " LV_SYMBOL_OK) : (LV_SYMBOL_WIFI " " LV_SYMBOL_CLOSE);
 
     LOG_DBG("connected? %s", state.connected ? "true" : "false");
-    lv_label_set_text(label, text);
+    lv_label_set_text_fmt(label,
+                      "%s\n         PEWEPSKEI",
+                      text);
 }
 
 static void output_status_update_cb(struct peripheral_status_state state) {
@@ -45,6 +47,10 @@ ZMK_SUBSCRIPTION(widget_peripheral_status, zmk_split_peripheral_status_changed);
 int zmk_widget_peripheral_status_init(struct zmk_widget_peripheral_status *widget,
                                       lv_obj_t *parent) {
     widget->obj = lv_label_create(parent);
+
+    lv_obj_set_style_text_font(widget->obj,
+                               lv_theme_get_font_small(parent),
+                               LV_PART_MAIN);
 
     sys_slist_append(&widgets, &widget->node);
 
